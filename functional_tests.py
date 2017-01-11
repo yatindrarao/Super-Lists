@@ -22,7 +22,7 @@ class NewVisitorTest(unittest.TestCase):
         self.assertEqual('To-Do', header_text)
 
         # He can also input new to-do item
-        inputbox = self.browser.get_element_by_id('id_new_item')
+        inputbox = self.browser.find_element_by_id('id_new_item')
         self.assertEqual(inputbox.get_attribute('placeholder'),
             'Enter a to-do item')
 
@@ -33,8 +33,8 @@ class NewVisitorTest(unittest.TestCase):
         # "1: Buy grocery items" as an item in a to-do list table
         inputbox.send_keys(Keys.ENTER)
 
-        table = self.browser.get_element_by_id('id_list_table')
-        rows = table.get_elements_by_tag_name('tr')
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(any(row.text == '1: Buy grocery items' for row in rows))
 
         # There is still text inviting him to add new item in to-do list
