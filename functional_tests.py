@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import unittest
 
 chromedriver = "/usr/bin/chromedriver"
@@ -17,7 +18,28 @@ class NewVisitorTest(unittest.TestCase):
 
         # He notices browser title and header mention To-Do
         self.assertIn('To Do List', self.browser.title)
+        header_text = self.browser.find_element_by_tag_name('h1').text
+        self.assertEqual('To-Do', header_text)
+
+        # He can also input new to-do item
+        inputbox = self.browser.get_element_by_id('id_new_item')
+        self.assertEqual(inputbox.get_attribute('placeholder'),
+            'Enter a to-do item')
+
+        # He now enter new to-do item 'Buy grocery items'
+        inputbox.send_keys('Buy grocery items')
+
+        # When he hits enter the page updates and now the page lists
+        # "1: Buy grocery items" as an item in a to-do list table
+        inputbox.send_keys(Keys.ENTER)
+
+        table = self.browser.get_element_by_id('id_list_table')
+        rows = table.get_elements_by_tag_name('tr')
+        self.assertTrue(any(row.text == '1: Buy grocery items' for row in rows))
+
+        # There is still text inviting him to add new item in to-do list
         self.fail('Finish Test!')
+
 
 if __name__ == '__main__':
     unittest.main()
