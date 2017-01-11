@@ -35,9 +35,26 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(any(row.text == '1: Buy grocery items' for row in rows))
+        self.assertTrue(
+        any(row.text == '1: Buy grocery items' for row in rows),
+            "New to-do item did not appear in table --its text was\n%s" % (
+                table.text,
+            )
+        )
 
         # There is still text inviting him to add new item in to-do list
+        # He now enter new to-do item 'Take vegetables'
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Take vegetables')
+        inputbox.send_keys(Keys.ENTER)
+
+        # When he hits enter the page updates and now the page lists
+        # should have 2 items
+
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: Buy grocery items',[row.text for row in rows])
+        self.assertIn('2: Take vegetables', [row.text for row in rows])
         self.fail('Finish Test!')
 
 
