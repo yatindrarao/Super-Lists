@@ -23,6 +23,9 @@ For installing packages you need to first activate the virtualenv then perform f
 ```
 $ pip install "django<1.11" "selenium<3" PyMySQL
 ```
+You will also need google webdriver for functional tests in selenium.
+- Download the driver from https://sites.google.com/a/chromium.org/chromedriver/getting-started
+- Move the `chromedriver` file to directory /usr/bin/
 
 ### Step 3
 Take clone in the project directory.You are now ready for development.
