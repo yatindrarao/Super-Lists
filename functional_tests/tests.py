@@ -1,6 +1,7 @@
 from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import unittest
 
 chromedriver = "/usr/bin/chromedriver"
 
@@ -24,7 +25,7 @@ class NewVisitorTest(LiveServerTestCase):
         # He notices browser title and header mention To-Do
         self.assertIn('To Do List', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertEqual('To-Do', header_text)
+        self.assertIn('To-do', header_text)
 
         # He can also input new to-do item
         inputbox = self.browser.find_element_by_id('id_new_item')
@@ -77,7 +78,7 @@ class NewVisitorTest(LiveServerTestCase):
         ## We use a new browser session to make sure that no information of
         ## Dixit is comming along from cookies
         self.browser.quit()
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome(chromedriver)
 
         # Shubham visits the home page there is no sign of Dixit's list
         self.browser.get(self.live_server_url)
