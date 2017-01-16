@@ -59,3 +59,44 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_row_in_list_table('2: Take vegetables')
 
         self.fail('Finish Test!')
+
+    def test_multiple_users_can_start_lists_at_different_urls(self):
+        # Dixit starts a new todo list
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy groceries')
+        inputbox.send_keys(Keys.ENTER)
+        self.check_for_row_in_list_table('1: Buy groceries')
+
+        # He notices that the list has unique URL
+        dixit_url = self.browser.current_url
+        self.assertRegex(dixit_url, '/lists/.+')
+
+        # Now a new user Shubham come along for new site
+
+        ## We use a new browser session to make sure that no information of
+        ## Dixit is comming along from cookies
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Shubham visits the home page there is no sign of Dixit's list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy groceries', page_text)
+
+        # Shubham starts new list by entering a new item
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+        self.check_for_row_in_list_table('1: Buy milk')
+
+        # Shubham gets his own unique URL
+        shubham_url = self.browser.current_url
+        self.assertRegex(shubham_url, '/lists/.+')
+
+        # Again there is no trace of Dixit's list
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy groceries', page_text)
+        self.assertIn('Buy milk', page_text)
+
+        # Satisfied he go back to sleep
