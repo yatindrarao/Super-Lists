@@ -1,10 +1,10 @@
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import unittest
 
 chromedriver = "/usr/bin/chromedriver"
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Chrome(chromedriver)
         self.browser.implicitly_wait(3)
@@ -19,7 +19,7 @@ class NewVisitorTest(unittest.TestCase):
 
     def test_can_start_and_retrieve_it_later(self):
         # User first check out the homepage of to-do app
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # He notices browser title and header mention To-Do
         self.assertIn('To Do List', self.browser.title)
@@ -57,9 +57,5 @@ class NewVisitorTest(unittest.TestCase):
         # should have 2 items
         self.check_for_row_in_list_table('1: Buy grocery items')
         self.check_for_row_in_list_table('2: Take vegetables')
-        
+
         self.fail('Finish Test!')
-
-
-if __name__ == '__main__':
-    unittest.main()
