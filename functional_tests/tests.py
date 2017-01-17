@@ -2,6 +2,7 @@ from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
+import time
 
 chromedriver = "/usr/bin/chromedriver"
 
@@ -38,15 +39,7 @@ class NewVisitorTest(LiveServerTestCase):
         # When he hits enter the page updates and now the page lists
         # "1: Buy grocery items" as an item in a to-do list table
         inputbox.send_keys(Keys.ENTER)
-
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-        any(row.text == '1: Buy grocery items' for row in rows),
-            "New to-do item did not appear in table --its text was\n%s" % (
-                table.text,
-            )
-        )
+        self.check_for_row_in_list_table('1: Buy grocery items')
 
         # There is still text inviting him to add new item in to-do list
         # He now enter new to-do item 'Take vegetables'
@@ -58,8 +51,6 @@ class NewVisitorTest(LiveServerTestCase):
         # should have 2 items
         self.check_for_row_in_list_table('1: Buy grocery items')
         self.check_for_row_in_list_table('2: Take vegetables')
-
-        self.fail('Finish Test!')
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # Dixit starts a new todo list
