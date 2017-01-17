@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='item',
             name='list',
-            field=models.ForeignKey(db_column='list', null=True, on_delete=django.db.models.deletion.CASCADE, to='lists.List'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='lists.List'),
         ),
     ]
