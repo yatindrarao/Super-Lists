@@ -1,6 +1,7 @@
 ### Superlists
 A django app developed with TDD approach as described here http://www.obeythetestinggoat.com/ .
 
+This app is available at http://superlists-staging-site.tk/ 
 ## Dependencies
 
 - Python 3
