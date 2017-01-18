@@ -3,10 +3,22 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 import time
+import sys
 
 chromedriver = "/usr/bin/chromedriver"
 
 class NewVisitorTest(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.server_url = 'http://' + arg.split('=')[1]
+                return
+        super().setUpClass()
+        cls.server_url = cls.live_server_url
+
+
     def setUp(self):
         self.browser = webdriver.Chrome(chromedriver)
         self.browser.implicitly_wait(3)
@@ -21,7 +33,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def test_can_start_and_retrieve_it_later(self):
         # User first check out the homepage of to-do app
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
 
         # He notices browser title and header mention To-Do
         self.assertIn('To Do List', self.browser.title)
@@ -54,7 +66,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # Dixit starts a new todo list
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Buy groceries')
         inputbox.send_keys(Keys.ENTER)
@@ -72,7 +84,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.browser = webdriver.Chrome(chromedriver)
 
         # Shubham visits the home page there is no sign of Dixit's list
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy groceries', page_text)
 
@@ -94,7 +106,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # Satisfied he go back to sleep
 
     def test_layout_and_styling(self):
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         self.browser.set_window_size(1024, 768)
 
         inputbox = self.browser.find_element_by_id('id_new_item')
