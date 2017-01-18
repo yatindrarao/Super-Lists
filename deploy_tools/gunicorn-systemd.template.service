@@ -1,0 +1,11 @@
+[Unit]
+Description=Gunicorn server for superlists-staging-site.tk
+
+[Service]
+Restart=on-failure
+User=ubuntu
+WorkingDirectory=/home/ubuntu/sites/superlists-staging-site.tk/source
+ExecStart=/home/ubuntu/sites/superlists-staging-site.tk/virtualenv/bin/gunicorn --bind unix:/tmp/superlists-staging-site.tk.socket su$
+
+[Install]
+WantedBy=multi-user.target
