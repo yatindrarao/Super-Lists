@@ -7,12 +7,14 @@ from lists.views import home_page
 
 
 class HomePageTest(TestCase):
+
     def test_uses_home_template(self):
         response = self.client.get('/')
         self.assertTemplateUsed(response, 'home.html')
 
 
 class ListViewTest(TestCase):
+
     def test_uses_list_template(self):
         list_ = List.objects.create()
         response = self.client.get('/lists/%d/'%(list_.id,))
@@ -74,6 +76,7 @@ class ListViewTest(TestCase):
         self.assertContains(response, expected_error)
 
 class NewListTest(TestCase):
+
     def test_can_save_post(self):
         response = self.client.post(
                         '/lists/new',
