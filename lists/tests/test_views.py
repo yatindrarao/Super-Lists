@@ -4,7 +4,8 @@ from django.test import TestCase
 from django.http import HttpRequest
 from lists.models import Item, List
 from lists.views import home_page
-from lists.forms import ItemForm
+from lists.forms import ItemForm, EMPTY_ITEM_ERROR
+
 
 class HomePageTest(TestCase):
 
@@ -76,8 +77,7 @@ class ListViewTest(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'lists.html')
-        expected_error = escape("You can't have empty list item")
-        self.assertContains(response, expected_error)
+        self.assertContains(response, escape(EMPTY_ITEM_ERROR))
 
 class NewListTest(TestCase):
 
@@ -103,8 +103,7 @@ class NewListTest(TestCase):
         response = self.client.post('/lists/new', data={'text': ''})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
-        expected_error = escape("You can't have empty list item")
-        self.assertContains(response, expected_error)
+        self.assertContains(response, escape(EMPTY_ITEM_ERROR))
 
     def test_invalid_list_items_arent_saved(self):
         self.client.post('/lists/new', data={'text': ''})
