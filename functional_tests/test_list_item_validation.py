@@ -7,8 +7,10 @@ class ItemValidationTest(FunctionalTest):
         self.browser.get(self.server_url)
         self.get_item_input_box().send_keys('\n')
 
-        error = self.browser.find_element_by_css_selector('.has-error')
-        self.assertEqual(error.text, "You can't have empty list item")
+        self.assertNotIn(
+            'Buy milk',
+            self.browser.find_element_by_tag_name('body').text
+        )
 
         self.get_item_input_box().send_keys('Buy milk\n')
         self.check_for_row_in_list_table('1: Buy milk')
@@ -16,9 +18,5 @@ class ItemValidationTest(FunctionalTest):
         self.get_item_input_box().send_keys('\n')
 
         self.check_for_row_in_list_table('1: Buy milk')
-        error = self.browser.find_element_by_css_selector('.has-error')
-        self.assertEqual(error.text, "You can't have empty list item")
-
-        self.get_item_input_box().send_keys('Buy tea\n')
-        self.check_for_row_in_list_table('1: Buy milk')
-        self.check_for_row_in_list_table('2: Buy tea')
+        rows = self.browser.find_elements_by_css_selector('#id_list_table tr')
+        self.assertEqual(len(rows), 1)
