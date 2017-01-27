@@ -12,6 +12,7 @@ def view_list(request, list_id):
     form = ItemForm()
     if request.method == 'POST':
         form = ItemForm(data=request.POST)
+        print(form.is_valid())
         if form.is_valid():
             form.save(for_list=list_)
             return redirect(list_)
